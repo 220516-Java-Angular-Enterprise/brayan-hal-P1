@@ -1,20 +1,23 @@
 package com.revature.dao;
 
+import com.revature.models.Reimbursements;
+
 import java.util.List;
 
-public class ReimbursementDAO implements ICrudDAO{
+public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
+
     @Override
-    public void save(Object obj) {
+    public void save(Reimbursements obj) {
 
     }
 
     @Override
-    public void update(Object obj) {
+    public void update(Reimbursements obj) {
 
     }
 
     @Override
-    public void delete(Object obj) {
+    public void delete(Reimbursements obj) {
 
     }
 
