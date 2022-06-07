@@ -19,6 +19,14 @@ public class Reimbursements {
         super();
     }
 
+    public Reimbursements(double amount, Timestamp submitted, String author_id, String status_id, String type_id) {
+        this.amount = amount;
+        this.submitted = submitted;
+        this.author_id = author_id;
+        this.status_id = status_id;
+        this.type_id = type_id;
+    }
+
     public Reimbursements(String reimb_id, double amount, Timestamp submitted, Timestamp resolved, String description, byte receipt, String payment_id, String author_id, String resolver_id, String status_id, String type_id) {
         this.reimb_id = reimb_id;
         this.amount = amount;
