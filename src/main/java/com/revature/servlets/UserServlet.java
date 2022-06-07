@@ -33,7 +33,7 @@ public class UserServlet extends HttpServlet {
             Users newUser = userService.register(request);
             resp.setStatus(201);
             resp.setContentType("application/json");
-            resp.getWriter().write(objectMapper.writeValueAsString(newUser.getID()));
+            resp.getWriter().write(objectMapper.writeValueAsString(newUser.getUser_id()));
         }catch(InvalidRequestException e){
             resp.setStatus(404);
         }catch(ResourceConflictException e){
