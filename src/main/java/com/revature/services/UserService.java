@@ -2,10 +2,12 @@ package com.revature.services;
 
 import com.revature.dao.UserDAO;
 import com.revature.dtos.requests.NewUserRequest;
+import com.revature.dtos.requests.Principle;
 import com.revature.models.Users;
 import com.revature.util.exceptions.InvalidRequestException;
 import com.revature.util.exceptions.ResourceConflictException;
 
+import java.security.Principal;
 import java.util.UUID;
 
 public class UserService {
@@ -15,8 +17,10 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public void Login(){
+    public Principle Login(Users user){
+        userDAO.login(user);
 
+        return null;
     }
 
     public Users register(NewUserRequest request){

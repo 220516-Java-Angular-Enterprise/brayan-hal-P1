@@ -27,6 +27,6 @@ public class ContextLoaderListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        ServletContextListener.super.contextDestroyed(sce);
+        System.out.println("\nWeb App Destroyed***********************");
     }
 }
