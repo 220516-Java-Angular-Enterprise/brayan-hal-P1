@@ -19,9 +19,10 @@ public class Reimbursements {
         super();
     }
 
-    public Reimbursements(double amount, Timestamp submitted, String author_id, String status_id, String type_id) {
+    public Reimbursements(double amount, Timestamp submitted, String description, String author_id, String status_id, String type_id) {
         this.amount = amount;
         this.submitted = submitted;
+        this.description = description;
         this.author_id = author_id;
         this.status_id = status_id;
         this.type_id = type_id;
