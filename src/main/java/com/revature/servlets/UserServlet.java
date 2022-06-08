@@ -2,7 +2,7 @@ package com.revature.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.dtos.requests.NewUserRequest;
-import com.revature.models.User;
+import com.revature.models.Users;
 import com.revature.services.UserService;
 import com.revature.util.annotations.Inject;
 import com.revature.util.exceptions.InvalidRequestException;
@@ -30,7 +30,7 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try{
             NewUserRequest request = objectMapper.readValue(req.getInputStream(), NewUserRequest.class);
-            User newUser = userService.register(request);
+            Users newUser = userService.register(request);
             resp.setStatus(201);
             resp.setContentType("application/json");
             resp.getWriter().write(objectMapper.writeValueAsString(newUser.getUser_id()));

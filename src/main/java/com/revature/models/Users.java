@@ -1,6 +1,6 @@
 package com.revature.models;
 
-public class User {
+public class Users {
     private String user_id;
     private String username;
     private String email;
@@ -10,12 +10,12 @@ public class User {
     private boolean is_active;
     private String role_id;
 
-    public User(){
+    public Users(){
         super();
     }
 
 
-    public User(String user_id, String username, String email, String password, String given_name, String surname, boolean is_active, String role_id) {
+    public Users(String user_id, String username, String email, String password, String given_name, String surname, boolean is_active, String role_id) {
         this.user_id = user_id;
         this.username = username;
         this.email = email;

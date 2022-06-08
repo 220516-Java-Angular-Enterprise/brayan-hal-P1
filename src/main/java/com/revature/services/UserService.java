@@ -2,7 +2,7 @@ package com.revature.services;
 
 import com.revature.dao.UserDAO;
 import com.revature.dtos.requests.NewUserRequest;
-import com.revature.models.User;
+import com.revature.models.Users;
 import com.revature.util.exceptions.InvalidRequestException;
 import com.revature.util.exceptions.ResourceConflictException;
 
@@ -19,8 +19,8 @@ public class UserService {
 
     }
 
-    public User register(NewUserRequest request){
-        User user = new User(request.getUsername(), request.getPassword());
+    public Users register(NewUserRequest request){
+        Users user = new Users(request.getUsername(), request.getPassword());
         if(isNotDuplicateUsername(user.getUsername())){
             if(isValidUsername(user.getUsername())){
                 if(isValidPassword(user.getPassword())){

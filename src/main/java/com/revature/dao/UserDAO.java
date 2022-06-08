@@ -1,6 +1,6 @@
 package com.revature.dao;
 
-import com.revature.models.User;
+import com.revature.models.Users;
 import com.revature.util.database.DatabaseConnection;
 
 import java.sql.Connection;
@@ -10,26 +10,26 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDAO implements ICrudDAO<User>{
+public class UserDAO implements ICrudDAO<Users>{
     Connection con = DatabaseConnection.getCon();
 
     @Override
-    public void save(User obj) {
+    public void save(Users obj) {
 
     }
 
     @Override
-    public void update(User obj) {
+    public void update(Users obj) {
 
     }
 
     @Override
-    public void delete(User obj) {
+    public void delete(Users obj) {
 
     }
 
     @Override
-    public List<User> getAll() {
+    public List<Users> getAll() {
         return null;
     }
 
