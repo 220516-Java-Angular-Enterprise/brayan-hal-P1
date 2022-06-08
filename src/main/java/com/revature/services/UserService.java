@@ -3,6 +3,10 @@ package com.revature.services;
 import com.revature.dao.UserDAO;
 import com.revature.dtos.requests.NewUserRequest;
 import com.revature.models.Users;
+import com.revature.util.exceptions.InvalidRequestException;
+import com.revature.util.exceptions.ResourceConflictException;
+
+import java.util.UUID;
 
 public class UserService {
     private final UserDAO userDAO;
@@ -16,18 +20,27 @@ public class UserService {
     }
 
     public Users register(NewUserRequest request){
-        return null;
+        Users user = new Users(request.getUsername(), request.getPassword());
+        if(isNotDuplicateUsername(user.getUsername())){
+            if(isValidUsername(user.getUsername())){
+                if(isValidPassword(user.getPassword())){
+                    user.setUser_id(UUID.randomUUID().toString());
+                    userDAO.save(user);
+                }else throw new InvalidRequestException("Invalid password. Minimum eight characters, at least one letter, one number and one special character.");
+            }else throw new InvalidRequestException("Invalid username. Username needs to be 8-20 characters long.");
+        }else throw new ResourceConflictException("Username is already taken :(");
+        return user;
     }
 
     public boolean isValidUsername(String username){
-        return false;
+        return username.matches("^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$");
     }
 
     public boolean isValidPassword(String password){
-        return false;
+        return password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$");
     }
 
-    public boolean isDuplicateUsername(String username){
-        return false;
+    public boolean isNotDuplicateUsername(String username){
+        return !userDAO.getAllUsernames().contains(username);
     }
 }
