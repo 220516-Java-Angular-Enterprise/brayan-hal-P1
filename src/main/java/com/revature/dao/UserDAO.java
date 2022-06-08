@@ -58,6 +58,20 @@ public class UserDAO implements ICrudDAO<Users>{
         return usernames;
     }
 
+    public List<String> getAllEmails(){
+        List<String> emails = new ArrayList<>();
+        try{
+            PreparedStatement ps = con.prepareStatement("select email from ers_users");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                emails.add(rs.getString("email"));
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return emails;
+    }
+
     public boolean login(Users user){
         try{
             PreparedStatement ps = con.prepareStatement("select * from user where username = ? and password = ?");
