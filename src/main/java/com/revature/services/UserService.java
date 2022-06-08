@@ -26,13 +26,15 @@ public class UserService {
     public Users register(NewUserRequest request){
         Users user = new Users(request.getUsername(), request.getPassword(), request.getEmail(), request.getName(), request.getSurname());
         if(isNotDuplicateUsername(user.getUsername())){
-            if(isValidUsername(user.getUsername())){
-                if(isValidPassword(user.getPassword())){
-                    user.setUser_id(UUID.randomUUID().toString());
-                    userDAO.save(user);
-                }else throw new InvalidRequestException("Invalid password. Minimum eight characters, at least one letter, one number and one special character.");
-            }else throw new InvalidRequestException("Invalid username. Username needs to be 8-20 characters long.");
-        }else throw new ResourceConflictException("Username is already taken :(");
+            if(isNotDuplicateEmail(user.getEmail())){
+                if(isValidUsername(user.getUsername())){
+                    if(isValidPassword(user.getPassword())){
+                        user.setUser_id(UUID.randomUUID().toString());
+                        userDAO.save(user);
+                    }else throw new InvalidRequestException("Invalid password. Minimum eight characters, at least one letter, one number and one special character.");
+                }else throw new InvalidRequestException("Invalid username. Username needs to be 8-20 characters long.");
+            }else throw new ResourceConflictException("Email is already taken ");
+        }else throw new ResourceConflictException("Username is already taken ");
         return user;
     }
 
@@ -47,4 +49,6 @@ public class UserService {
     public boolean isNotDuplicateUsername(String username){
         return !userDAO.getAllUsernames().contains(username);
     }
+
+    public boolean isNotDuplicateEmail(String email){return !userDAO.getAllEmails().contains(email);}
 }
