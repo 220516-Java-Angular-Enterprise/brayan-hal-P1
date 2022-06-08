@@ -58,4 +58,18 @@ public class UserDAO implements ICrudDAO<Users>{
         return usernames;
     }
 
+    public boolean login(Users user){
+        try{
+            PreparedStatement ps = con.prepareStatement("select * from user where username = ? and password = ?");
+            ps.setString(1,user.getUsername());
+            ps.setString(2,user.getPassword());
+            ResultSet rs = ps.executeQuery();
+            if(rs.next())return true;
+            else return false;
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
 }
