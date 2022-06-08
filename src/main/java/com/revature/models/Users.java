@@ -15,9 +15,12 @@ public class Users {
     }
 
 
-    public Users(String username, String password) {
+    public Users(String username, String password, String email, String given_name, String surname) {
         this.username = username;
         this.password = password;
+        this.email = email;
+        this.given_name =  given_name;
+        this.surname = surname;
     }
 
     public Users(String user_id, String username, String email, String password, String given_name, String surname, boolean is_active, String role_id) {

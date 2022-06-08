@@ -12,7 +12,7 @@ import javax.servlet.ServletContextListener;
 public class ContextLoaderListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        System.out.println("\nWeb App created");
+        System.out.println("\nWeb App created***********************");
 
         //Mapper is used for writing or reading to/from a json file to or from POJOs
         ObjectMapper objectMapper = new ObjectMapper();

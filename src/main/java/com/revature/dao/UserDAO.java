@@ -15,7 +15,18 @@ public class UserDAO implements ICrudDAO<Users>{
 
     @Override
     public void save(Users obj) {
-
+        try{
+            PreparedStatement ps = con.prepareStatement("insert into ers_users(user_id, username, password, email, given_name, surname) values(?,?,?,?,?,?)");
+            ps.setString(1, obj.getUser_id());
+            ps.setString(2, obj.getUsername());
+            ps.setString(3, obj.getPassword());
+            ps.setString(4, obj.getEmail());
+            ps.setString(5, obj.getGiven_name());
+            ps.setString(6, obj.getSurname());
+            ps.executeUpdate();
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
