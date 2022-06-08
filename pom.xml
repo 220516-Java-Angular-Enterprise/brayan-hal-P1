@@ -59,6 +59,7 @@
                         <path>/reimbursements101</path>
                         <username>admin</username>
                         <password>revature</password>
+                        <update>true</update>
                     </configuration>
                 </plugin>
             </plugins>
