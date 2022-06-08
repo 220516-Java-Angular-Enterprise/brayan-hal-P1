@@ -20,7 +20,7 @@ public class UserService {
     }
 
     public Users register(NewUserRequest request){
-        Users user = new Users(request.getUsername(), request.getPassword());
+        Users user = new Users(request.getUsername(), request.getPassword(), request.getEmail(), request.getName(), request.getSurname());
         if(isNotDuplicateUsername(user.getUsername())){
             if(isValidUsername(user.getUsername())){
                 if(isValidPassword(user.getPassword())){

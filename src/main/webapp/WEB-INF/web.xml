@@ -3,9 +3,16 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
              http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+<<<<<<< HEAD
     <listener>
         <listener-class>com.revature.util.ContextLoaderListener</listener-class>
     </listener>
 
 
+=======
+
+    <listener>
+        <listener-class>com.revature.util.ContextLoaderListener</listener-class>
+    </listener>
+>>>>>>> 5d76b5cb2bfe9334451a93203f9e5fa86ec74638
 </web-app>
