@@ -43,7 +43,18 @@ public class UserDAO implements ICrudDAO<Users>{
 
     @Override
     public List<Users> getAll() {
-        return null;
+        List<Users> users = new ArrayList<>();
+        try(Connection con = ConnectionFactory.getInstance().getConnection()){
+            PreparedStatement ps = con.prepareStatement("select * from ers_users");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                users.add(new Users(rs.getString("user_id"),rs.getString("username"),rs.getString("password"),rs.getString("email"),
+                        rs.getString("given_name"),rs.getString("surname")));
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return users;
     }
 
     public List<String> getAllUsernames(){
@@ -91,12 +102,18 @@ public class UserDAO implements ICrudDAO<Users>{
     public Users getUsernameAndPassword(String username, String password){
         Users user = null;
         try (Connection con = ConnectionFactory.getInstance().getConnection()){
+<<<<<<< HEAD
             PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_users WHERE username = ? and password = crypt(?,password)");
+=======
+            PreparedStatement ps = con.prepareStatement("select user_id, username, password, email, given_name, surname, role from ers_users as u \n" +
+                    "inner join ers_user_roles as r on u.role_id = r.role_id  WHERE username = ? and password = ?");
+>>>>>>> 9bd1c2ec1b74f74eed4500d3c93d475153f944af
             ps.setString(1,username);
             ps.setString(2,password);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                user= new Users(rs.getString("user_id"),rs.getString("username"),rs.getString("password"),rs.getString("email"),rs.getString("given_name"),rs.getString("surname"));
+                user= new Users(rs.getString("user_id"),rs.getString("username"),rs.getString("password"),rs.getString("email"),
+                        rs.getString("given_name"),rs.getString("surname"), rs.getString("role"));
             }
 
 

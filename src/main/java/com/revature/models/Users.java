@@ -8,7 +8,7 @@ public class Users {
     private String given_name;
     private String surname;
     private boolean is_active;
-    private String role_id;
+    private String role;
 
     public Users(){
         super();
@@ -31,15 +31,14 @@ public class Users {
         this.surname = surname;
     }
 
-    public Users(String user_id, String username, String email, String password, String given_name, String surname, boolean is_active, String role_id) {
+    public Users(String user_id, String username, String email, String password, String given_name, String surname, String role) {
         this.user_id = user_id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.given_name = given_name;
         this.surname = surname;
-        this.is_active = is_active;
-        this.role_id = role_id;
+        this.role = role;
     }
 
     public String getUser_id() {
@@ -98,12 +97,12 @@ public class Users {
         this.is_active = is_active;
     }
 
-    public String getRole_id() {
-        return role_id;
+    public String getRole() {
+        return role;
     }
 
-    public void setRole_id(String role_id) {
-        this.role_id = role_id;
+    public void setRole_id(String role) {
+        this.role = role;
     }
 
     @Override
@@ -116,7 +115,7 @@ public class Users {
                 ", given_name='" + given_name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", is_active=" + is_active +
-                ", role_id='" + role_id + '\'' +
+                ", role_id='" + role + '\'' +
                 '}';
     }
 }
