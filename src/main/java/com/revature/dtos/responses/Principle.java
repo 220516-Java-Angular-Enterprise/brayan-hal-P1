@@ -6,6 +6,7 @@ public class Principle {
     //unique attributes to user -- can add more later--//
     private String username;
     private String user_id;
+    private String role;
 
     public Principle(){
         super();
@@ -14,6 +15,21 @@ public class Principle {
     public Principle(Users users) {
         this.username = users.getUsername();
         this.user_id = users.getUser_id();
+        this.role = users.getRole();
+    }
+
+    public Principle(String username, String user_id, String role) {
+        this.username = username;
+        this.user_id = user_id;
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getUsername() {

@@ -10,6 +10,7 @@ import com.revature.util.exceptions.InvalidRequestException;
 import com.revature.util.exceptions.InvalidUserException;
 import com.revature.util.exceptions.ResourceConflictException;
 
+import java.util.List;
 import java.util.UUID;
 
 public class UserService {
@@ -42,6 +43,10 @@ public class UserService {
             }else throw new ResourceConflictException("Email is already taken ");
         }else throw new ResourceConflictException("Username is already taken ");
         return user;
+    }
+
+    public List<Users> getAllUsers(){
+        return userDAO.getAll();
     }
 
     public boolean isValidUsername(String username){
