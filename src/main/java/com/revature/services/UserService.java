@@ -1,13 +1,15 @@
 package com.revature.services;
 
 import com.revature.dao.UserDAO;
+import com.revature.dtos.requests.LoginRequest;
 import com.revature.dtos.requests.NewUserRequest;
-import com.revature.dtos.requests.Principle;
+import com.revature.dtos.responses.Principle;
 import com.revature.models.Users;
+import com.revature.util.exceptions.AuthenticationException;
 import com.revature.util.exceptions.InvalidRequestException;
+import com.revature.util.exceptions.InvalidUserException;
 import com.revature.util.exceptions.ResourceConflictException;
 
-import java.security.Principal;
 import java.util.UUID;
 
 public class UserService {
@@ -17,10 +19,14 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public Principle Login(Users user){
-        userDAO.login(user);
-
-        return null;
+    public Users Login(LoginRequest request){
+        Users user = new Users();
+        if (!isValidUsername(request.getUsername()) || !isValidPassword(request.getPassword())) throw new InvalidRequestException("Invalid username or Password!!");
+        user = userDAO.getUsernameAndPassword(request.getUsername(),request.getPassword());
+        if(user == null){
+            throw new AuthenticationException("Provided Invalid Credential!");
+        }
+        return user;
     }
 
     public Users register(NewUserRequest request){
@@ -51,4 +57,13 @@ public class UserService {
     }
 
     public boolean isNotDuplicateEmail(String email){return !userDAO.getAllEmails().contains(email);}
+
+    private Users isValidCredentials(Users user) {
+        if (user.getUsername() == null && user.getPassword() == null)
+            throw new InvalidUserException("Incorrect username and password.");
+        else if (user.getUsername() == null) throw new InvalidUserException("Incorrect username.");
+        else if (user.getPassword() == null) throw new InvalidUserException("Incorrect password.");
+
+        return user;
+    }
 }
