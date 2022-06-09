@@ -74,7 +74,7 @@ public class UserDAO implements ICrudDAO<Users>{
 
     public boolean login(Users user){
         try{
-            PreparedStatement ps = con.prepareStatement("select * from user where username = ? and password = ?");
+            PreparedStatement ps = con.prepareStatement("select * from ers_user where username = ? and password = ?");
             ps.setString(1,user.getUsername());
             ps.setString(2,user.getPassword());
             ResultSet rs = ps.executeQuery();
@@ -84,6 +84,26 @@ public class UserDAO implements ICrudDAO<Users>{
             System.out.println(e.getMessage());
         }
         return false;
+    }
+
+    public Users getUsernameAndPassword(String username, String password){
+        Users user = null;
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_users WHERE username = ? and password = ?");
+            ps.setString(1,username);
+            ps.setString(2,password);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                user= new Users(rs.getString("username"),rs.getString("password"),rs.getString("email"),rs.getString("given_name"),rs.getString("surname"));
+            }
+
+
+
+
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return user;
     }
 
 }

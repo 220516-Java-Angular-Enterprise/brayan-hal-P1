@@ -20,6 +20,8 @@ public class DatabaseConnection {
             /* importing the jdbc jar file into jvm */
             Class.forName("org.postgresql.Driver");
 
+            System.out.println("Current Working Dir: " + System.getProperty("user.dir"));
+
             /* using prop object to load url, username, password */
             prop.load(new FileReader("src/main/resources/db.properties"));
 

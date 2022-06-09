@@ -1,14 +1,14 @@
 package com.revature.dtos.requests;
 
-public class Principle {
+public class LoginRequest {
     private String username;
     private String password;
 
-    public Principle(){
+    public LoginRequest(){
         super();
     }
 
-    public Principle(String username, String password) {
+    public LoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -27,5 +27,13 @@ public class Principle {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginRequest{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
