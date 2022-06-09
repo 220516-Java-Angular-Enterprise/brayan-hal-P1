@@ -96,7 +96,7 @@ public class UserDAO implements ICrudDAO<Users>{
             ps.setString(2,password);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                user= new Users(rs.getString("username"),rs.getString("password"),rs.getString("email"),rs.getString("given_name"),rs.getString("surname"));
+                user= new Users(rs.getString("user_id"),rs.getString("username"),rs.getString("password"),rs.getString("email"),rs.getString("given_name"),rs.getString("surname"));
             }
 
 
