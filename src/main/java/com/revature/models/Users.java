@@ -14,6 +14,14 @@ public class Users {
         super();
     }
 
+    public Users(String user_id, String username, String email, String password, String given_name, String surname) {
+        this.user_id = user_id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.given_name = given_name;
+        this.surname = surname;
+    }
 
     public Users(String username, String password, String email, String given_name, String surname) {
         this.username = username;
