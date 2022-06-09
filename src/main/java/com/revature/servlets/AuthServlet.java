@@ -3,10 +3,12 @@ package com.revature.servlets;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.dtos.requests.LoginRequest;
 import com.revature.dtos.responses.Principle;
+import com.revature.services.TokenService;
 import com.revature.services.UserService;
 import com.revature.util.annotations.Inject;
 import com.revature.util.exceptions.AuthenticationException;
 import com.revature.util.exceptions.InvalidRequestException;
+import jdk.nashorn.internal.parser.Token;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,10 +21,18 @@ public class AuthServlet extends HttpServlet {
 
     private final ObjectMapper mapper;
     private final UserService userService;
+    private final TokenService tokenService;
 
     public AuthServlet(ObjectMapper mapper, UserService userService) {
         this.mapper = mapper;
         this.userService = userService;
+        tokenService = null;
+    }
+
+    public AuthServlet(ObjectMapper mapper, UserService userService, TokenService tokenService) {
+        this.mapper = mapper;
+        this.userService = userService;
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -30,7 +40,9 @@ public class AuthServlet extends HttpServlet {
         try{
             LoginRequest request = mapper.readValue(req.getInputStream(), LoginRequest.class);
             Principle principle = new Principle(userService.Login(request));
-            resp.setStatus(200);
+
+            String token = tokenService.generateToken(principle);
+            resp.setHeader("Authorization",token);
             resp.setContentType("application/json");
             resp.getWriter().write(mapper.writeValueAsString(principle));
         }catch (InvalidRequestException e){
