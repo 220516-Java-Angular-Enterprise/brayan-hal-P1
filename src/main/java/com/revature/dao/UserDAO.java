@@ -17,7 +17,7 @@ public class UserDAO implements ICrudDAO<Users>{
     @Override
     public void save(Users obj) {
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-                PreparedStatement ps = con.prepareStatement("insert into ers_users(user_id, username, password, email, given_name, surname) values(?,?,?,?,?,?)");
+                PreparedStatement ps = con.prepareStatement("insert into ers_users(user_id, username, password, email, given_name, surname) values(?,?,crypt(?,gen_salt('bf')),?,?,?)");
                 ps.setString(1, obj.getUser_id());
                 ps.setString(2, obj.getUsername());
                 ps.setString(3, obj.getPassword());
@@ -76,7 +76,7 @@ public class UserDAO implements ICrudDAO<Users>{
 
     public boolean login(Users user){
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps = con.prepareStatement("select * from ers_user where username = ? and password = ?");
+            PreparedStatement ps = con.prepareStatement("select * from ers_user where username = ? and password = crypt(?,password)");
             ps.setString(1,user.getUsername());
             ps.setString(2,user.getPassword());
             ResultSet rs = ps.executeQuery();
@@ -91,7 +91,7 @@ public class UserDAO implements ICrudDAO<Users>{
     public Users getUsernameAndPassword(String username, String password){
         Users user = null;
         try (Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_users WHERE username = ? and password = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_users WHERE username = ? and password = crypt(?,password)");
             ps.setString(1,username);
             ps.setString(2,password);
             ResultSet rs = ps.executeQuery();
