@@ -1,12 +1,15 @@
 package com.revature.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.revature.dao.ReimbursementDAO;
 import com.revature.dao.UserDAO;
+
 import com.revature.services.ReimbursementService;
 import com.revature.services.TokenService;
 import com.revature.services.UserService;
 import com.revature.servlets.AuthServlet;
+
 import com.revature.servlets.ReimburseServlet;
 import com.revature.servlets.UserServlet;
 
@@ -31,6 +34,8 @@ public class ContextLoaderListener implements ServletContextListener {
         ServletContext context = sce.getServletContext();
         context.addServlet("UserServlet", userServlet).addMapping("/users/*");
         context.addServlet("AuthServlet", authServlet).addMapping("/auth");
+
+
         context.addServlet("ReimburseServlet",reimburseServlet).addMapping("/new-reimbursement");
     }
 
