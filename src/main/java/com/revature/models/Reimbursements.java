@@ -1,22 +1,25 @@
 package com.revature.models;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 public class Reimbursements {
     private String reimb_id;
     private double amount;
-    private Timestamp submitted;
-    private Timestamp resolved;
+    private Date submitted;
+    private Date resolved;
     private String description;
-    private byte receipt;
     private String payment_id;
     private String author_id;
     private String resolver_id;
     private String status_id;
     private String type_id;
 
-    public Reimbursements(){
-        super();
+    public Reimbursements(double amount, String description, String type_id, String author_id){
+        this.amount = amount;
+        this.description = description;
+        this.author_id = author_id;
+        this.type_id = type_id;
     }
 
     public Reimbursements(double amount, Timestamp submitted, String description, String author_id, String status_id, String type_id) {
@@ -28,13 +31,12 @@ public class Reimbursements {
         this.type_id = type_id;
     }
 
-    public Reimbursements(String reimb_id, double amount, Timestamp submitted, Timestamp resolved, String description, byte receipt, String payment_id, String author_id, String resolver_id, String status_id, String type_id) {
+    public Reimbursements(String reimb_id, double amount, Timestamp submitted, Timestamp resolved, String description, String payment_id, String author_id, String resolver_id, String status_id, String type_id) {
         this.reimb_id = reimb_id;
         this.amount = amount;
         this.submitted = submitted;
         this.resolved = resolved;
         this.description = description;
-        this.receipt = receipt;
         this.payment_id = payment_id;
         this.author_id = author_id;
         this.resolver_id = resolver_id;
@@ -58,19 +60,19 @@ public class Reimbursements {
         this.amount = amount;
     }
 
-    public Timestamp getSubmitted() {
+    public Date getSubmitted() {
         return submitted;
     }
 
-    public void setSubmitted(Timestamp submitted) {
+    public void setSubmitted(Date submitted) {
         this.submitted = submitted;
     }
 
-    public Timestamp getResolved() {
+    public Date getResolved() {
         return resolved;
     }
 
-    public void setResolved(Timestamp resolved) {
+    public void setResolved(Date resolved) {
         this.resolved = resolved;
     }
 
@@ -82,13 +84,6 @@ public class Reimbursements {
         this.description = description;
     }
 
-    public byte getReceipt() {
-        return receipt;
-    }
-
-    public void setReceipt(byte receipt) {
-        this.receipt = receipt;
-    }
 
     public String getPayment_id() {
         return payment_id;
@@ -138,7 +133,6 @@ public class Reimbursements {
                 ", submitted=" + submitted +
                 ", resolved=" + resolved +
                 ", description='" + description + '\'' +
-                ", receipt=" + receipt +
                 ", payment_id='" + payment_id + '\'' +
                 ", author_id='" + author_id + '\'' +
                 ", resolver_id='" + resolver_id + '\'' +
