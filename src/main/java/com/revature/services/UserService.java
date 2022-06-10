@@ -23,10 +23,12 @@ public class UserService {
     public Users Login(LoginRequest request){
         Users user = new Users();
         if (!isValidUsername(request.getUsername()) || !isValidPassword(request.getPassword())) throw new InvalidRequestException("Invalid username or Password!!");
+
         user = userDAO.getUsernameAndPassword(request.getUsername(),request.getPassword());
         if(user == null){
             throw new AuthenticationException("Provided Invalid Credential!");
         }
+
         return user;
     }
 
@@ -37,6 +39,8 @@ public class UserService {
                 if(isValidUsername(user.getUsername())){
                     if(isValidPassword(user.getPassword())){
                         user.setUser_id(UUID.randomUUID().toString());
+                        user.setIs_active(false);
+                        user.setRole_id("FkYtUwkJ7T8wApL3");
                         userDAO.save(user);
                     }else throw new InvalidRequestException("Invalid password. Minimum eight characters, at least one letter, one number and one special character.");
                 }else throw new InvalidRequestException("Invalid username. Username needs to be 8-20 characters long.");

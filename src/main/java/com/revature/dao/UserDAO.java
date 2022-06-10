@@ -17,13 +17,15 @@ public class UserDAO implements ICrudDAO<Users>{
     @Override
     public void save(Users obj) {
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-                PreparedStatement ps = con.prepareStatement("insert into ers_users(user_id, username, password, email, given_name, surname) values(?,?,crypt(?,gen_salt('bf')),?,?,?)");
+                PreparedStatement ps = con.prepareStatement("insert into ers_users(user_id, username, password, email, given_name, surname, is_active, role_id) values(?,?,crypt(?,gen_salt('bf')),?,?,?,?,?)");
                 ps.setString(1, obj.getUser_id());
                 ps.setString(2, obj.getUsername());
                 ps.setString(3, obj.getPassword());
                 ps.setString(4, obj.getEmail());
                 ps.setString(5, obj.getGiven_name());
                 ps.setString(6, obj.getSurname());
+                ps.setBoolean(7, obj.getIsActive());
+                ps.setString(8, obj.getRole());
                 ps.executeUpdate();
             }catch(SQLException e){
                 System.out.println(e.getMessage());
@@ -45,11 +47,12 @@ public class UserDAO implements ICrudDAO<Users>{
     public List<Users> getAll() {
         List<Users> users = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps = con.prepareStatement("select * from ers_users");
+            PreparedStatement ps = con.prepareStatement("select user_id, username, crypt(password, gen_salt('bf')) as password, email, given_name, surname,is_active, role from ers_users as u" +
+                                                             " inner join ers_user_roles as r on u.role_id = r.role_id");
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 users.add(new Users(rs.getString("user_id"),rs.getString("username"),rs.getString("password"),rs.getString("email"),
-                        rs.getString("given_name"),rs.getString("surname")));
+                        rs.getString("given_name"),rs.getString("surname"), rs.getBoolean("is_active"), rs.getString("role")));
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
@@ -102,23 +105,16 @@ public class UserDAO implements ICrudDAO<Users>{
     public Users getUsernameAndPassword(String username, String password){
         Users user = null;
         try (Connection con = ConnectionFactory.getInstance().getConnection()){
-<<<<<<< HEAD
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_users WHERE username = ? and password = crypt(?,password)");
-=======
-            PreparedStatement ps = con.prepareStatement("select user_id, username, password, email, given_name, surname, role from ers_users as u \n" +
-                    "inner join ers_user_roles as r on u.role_id = r.role_id  WHERE username = ? and password = ?");
->>>>>>> 9bd1c2ec1b74f74eed4500d3c93d475153f944af
+            PreparedStatement ps = con.prepareStatement("select user_id, username, password, email, given_name, surname, is_active ,role from ers_users as u \n" +
+                    "inner join ers_user_roles as r on u.role_id = r.role_id  WHERE username = ? and password = crypt(?,password)");
+
             ps.setString(1,username);
             ps.setString(2,password);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
                 user= new Users(rs.getString("user_id"),rs.getString("username"),rs.getString("password"),rs.getString("email"),
-                        rs.getString("given_name"),rs.getString("surname"), rs.getString("role"));
+                        rs.getString("given_name"),rs.getString("surname"), rs.getBoolean("is_active"),rs.getString("role"));
             }
-
-
-
-
         }catch (SQLException e){
             System.out.println(e.getMessage());
         }
