@@ -53,12 +53,13 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Principle requester = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
-
-
         if(requester == null){
             resp.setStatus(401);//unathorized
             return;
         }
+
+
+
         if(!requester.getRole().equals("ADMIN")){
             resp.setStatus(403);//forbidden
             return;

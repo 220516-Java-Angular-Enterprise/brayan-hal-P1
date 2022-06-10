@@ -7,6 +7,7 @@ public class Principle {
     private String username;
     private String user_id;
     private String role;
+    private boolean is_active;
 
     public Principle(){
         super();
@@ -16,12 +17,21 @@ public class Principle {
         this.username = users.getUsername();
         this.user_id = users.getUser_id();
         this.role = users.getRole();
+        this.is_active = users.getIsActive();
     }
 
     public Principle(String username, String user_id, String role) {
         this.username = username;
         this.user_id = user_id;
         this.role = role;
+    }
+
+    public boolean isIs_active() {
+        return is_active;
+    }
+
+    public void setIs_active(boolean is_active) {
+        this.is_active = is_active;
     }
 
     public String getRole() {
