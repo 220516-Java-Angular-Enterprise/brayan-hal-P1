@@ -58,8 +58,6 @@ public class UserServlet extends HttpServlet {
             return;
         }
 
-
-
         if(!requester.getRole().equals("ADMIN")){
             resp.setStatus(403);//forbidden
             return;
