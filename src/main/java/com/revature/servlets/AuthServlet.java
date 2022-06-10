@@ -38,11 +38,8 @@ public class AuthServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try{
-
             LoginRequest request = mapper.readValue(req.getInputStream(), LoginRequest.class);
-
             Principle principle = new Principle(userService.Login(request));
-
             if(!principle.isIs_active()) {resp.setStatus(403); return;}
             String token = tokenService.generateToken(principle);
             resp.setHeader("Authorization",token);

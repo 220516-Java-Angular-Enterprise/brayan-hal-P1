@@ -28,7 +28,7 @@ public class TokenService {
                 .setId(subject.getUser_id())
                 .setIssuer("reimbursement101")
                 .setIssuedAt(new Date(now))
-                .setExpiration(new Date(now+ jwtConfig.getExpirationTime()))
+                .setExpiration(new Date(now + jwtConfig.getExpirationTime()))
                 .setSubject(subject.getUsername())
                 .claim("role", subject.getRole())
                 .signWith(jwtConfig.getSigAlg(), jwtConfig.getSignInKey());
