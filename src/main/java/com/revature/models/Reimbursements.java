@@ -44,6 +44,14 @@ public class Reimbursements {
         this.type_id = type_id;
     }
 
+    public Reimbursements(double amount, Timestamp submitted, String description, String status_id, String type_id) {
+        this.amount = amount;
+        this.submitted = submitted;
+        this.description = description;
+        this.status_id = status_id;
+        this.type_id = type_id;
+    }
+
     public String getReimb_id() {
         return reimb_id;
     }

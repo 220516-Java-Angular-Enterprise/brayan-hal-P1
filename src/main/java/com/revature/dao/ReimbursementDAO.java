@@ -86,7 +86,7 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
         }
     return reimburse;
     }
-    //filter reimburse by status///
+    //filter ALL reimburse by status///
     public List<Reimbursements> getReimburseByStatus(String status_id){
         List<Reimbursements> reimburse = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
@@ -109,17 +109,17 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
     }
 
 
-    /// view reimburse by author ID or username???, lists out not null details
-    public List<Reimbursements> getReimburseByUser(String author_id){
+    /// view reimburse by author ID & status
+    public List<Reimbursements> getPendingByUser(String author_id){
         List<Reimbursements> reimburse = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements WHERE author_id = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements WHERE author_id = ? AND status_id = ?");
             ps.setString(1,author_id);
+            ps.setString(2,"P");
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 reimburse.add(new Reimbursements( rs.getDouble("amount"),
-                        rs.getTimestamp("submitted"), rs.getString("description"),
-                        rs.getString("author_id"), rs.getString("status_id"),
+                        rs.getTimestamp("submitted"), rs.getString("description"), rs.getString("status_id"),
                         rs.getString("type_id")
                 ));
             }

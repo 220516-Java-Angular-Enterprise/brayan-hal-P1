@@ -32,5 +32,5 @@ public class ReimbursementService {
     public List<Reimbursements> getByType(String type_id){return reimbursementDAO.getReimburseByType(type_id);}
     public List<Reimbursements> getByStatus(String status_id){return reimbursementDAO.getReimburseByStatus(status_id);}
     public List<Reimbursements> getDetailsByRemID(String reimb_id){return reimbursementDAO.getDetailsByReimburseID(reimb_id);}
-    public List<Reimbursements> getRemByUser(String author_id){return reimbursementDAO.getReimburseByUser(author_id);}
+    public List<Reimbursements> getPendingByUser(String author_id){return reimbursementDAO.getPendingByUser(author_id);}
 }
