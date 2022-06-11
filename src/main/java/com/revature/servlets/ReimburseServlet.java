@@ -58,24 +58,30 @@ public class ReimburseServlet extends HttpServlet {
             resp.setStatus(500);
         }
     }
-//view pending reimbursement
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doPut(req, resp);
+    }
+
+    //view pending reimbursement
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //Principle requester = tokenService.extractRequesterDetails(req.getHeader("Authorization?"));
-//        if (requester == null){
-//            resp.setStatus(401); // UNAUTHORIZED
-//            return;
-//        }
-//        if (requester.getRole().equals("FINANCIAL MANAGER")) {
-//            // if Financial Manager then can View all pending
-//            return;
-//        }
-//        if (requester.getRole().equals("ADMIN")) {
-//            resp.setStatus(403); //forbidden
-//            //Admin are not allowed to look at these
-//            return;
-//        }
-        List<Reimbursements> pendingReimburse = reimbursementService.getPendingByUser("6104a694-5ef3-49b3-930a-ef05d3879a7f");
+        Principle requester = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
+        if (requester == null){
+            resp.setStatus(401); // UNAUTHORIZED
+            return;
+        }
+        if (requester.getRole().equals("FINANCIAL MANAGER")) {
+            // if Financial Manager then can View all pending
+            return;
+        }
+        if (requester.getRole().equals("ADMIN")) {
+            resp.setStatus(403); //forbidden
+            //Admin are not allowed to look at these
+            return;
+        }
+        List<Reimbursements> pendingReimburse = reimbursementService.getPendingByUser(requester.getUsername());
         //pendingReimburse = pendingReimburse.stream().sorted(Comparator.comparing(Reimbursements::getSubmitted)).collect(Collectors.toList());
         resp.setContentType("application/json");
         resp.getWriter().write(mapper.writeValueAsString(pendingReimburse));

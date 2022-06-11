@@ -113,7 +113,7 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
     public List<Reimbursements> getPendingByUser(String author_id){
         List<Reimbursements> reimburse = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements WHERE author_id = ? AND status_id = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT amount, submitted, description, status_id, type_id FROM ers_reimbursements WHERE author_id = ? AND status_id = ?");
             ps.setString(1,author_id);
             ps.setString(2,"P");
             ResultSet rs = ps.executeQuery();
