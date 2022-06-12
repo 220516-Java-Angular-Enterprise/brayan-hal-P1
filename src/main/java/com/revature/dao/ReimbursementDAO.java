@@ -50,12 +50,9 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){
-                Reimbursements reimb = new Reimbursements(
-                        rs.getString("reimb_id"), rs.getDouble("amount"),
-                        rs.getTimestamp("submitted"), rs.getTimestamp("resolved"),
-                        rs.getString("description"),
-                        rs.getString("payment_id"), rs.getString("author_id"),
-                        rs.getString("resolver_id"), rs.getString("status_id"),
+                Reimbursements reimb = new Reimbursements( rs.getDouble("amount"),
+                        rs.getDate("submitted"),
+                        rs.getString("description"),  rs.getString("status_id"),
                         rs.getString("type_id")
                 );
                 reimburse.add(reimb);
@@ -73,11 +70,9 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
             ps.setString(1,type_id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                reimburse.add(new Reimbursements(rs.getString("reimb_id"), rs.getDouble("amount"),
-                        rs.getTimestamp("submitted"), rs.getTimestamp("resolved"),
-                        rs.getString("description"),
-                        rs.getString("payment_id"), rs.getString("author_id"),
-                        rs.getString("resolver_id"), rs.getString("status_id"),
+                reimburse.add(new Reimbursements( rs.getDouble("amount"),
+                        rs.getDate("submitted"),
+                        rs.getString("description"),  rs.getString("status_id"),
                         rs.getString("type_id")
                 ));
             }
@@ -94,11 +89,9 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
             ps.setString(1,status_id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                reimburse.add(new Reimbursements(rs.getString("reimb_id"), rs.getDouble("amount"),
-                        rs.getTimestamp("submitted"), rs.getTimestamp("resolved"),
-                        rs.getString("description"),
-                        rs.getString("payment_id"), rs.getString("author_id"),
-                        rs.getString("resolver_id"), rs.getString("status_id"),
+                reimburse.add(new Reimbursements( rs.getDouble("amount"),
+                        rs.getDate("submitted"),
+                        rs.getString("description"),  rs.getString("status_id"),
                         rs.getString("type_id")
                 ));
             }
@@ -113,14 +106,17 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
     public List<Reimbursements> getPendingByUser(String author_id){
         List<Reimbursements> reimburse = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps = con.prepareStatement("SELECT amount, submitted, description, status_id, type_id FROM ers_reimbursements WHERE author_id = ? AND status_id = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT amount, submitted, description, ers.status, ert.\"type\" \n" +
+                    "FROM ers_reimbursements er\n" +
+                    "inner join ers_reimbursement_statuses ers on er.status_id = ers.status_id \n" +
+                    "inner join ers_reimbursement_types ert on er.type_id = ert.type_id \n" +
+                    "WHERE author_id = ? AND er.status_id ='tUwkJ7T8wA'\n");
             ps.setString(1,author_id);
-            ps.setString(2,"P");
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                reimburse.add(new Reimbursements( rs.getDouble("amount"),
-                        rs.getTimestamp("submitted"), rs.getString("description"), rs.getString("status_id"),
-                        rs.getString("type_id")
+                reimburse.add(new Reimbursements((rs.getDouble("amount")),
+                        rs.getDate("submitted"), rs.getString("description"), rs.getString("status"),
+                        rs.getString("type")
                 ));
             }
         }catch (SQLException e){
@@ -136,11 +132,9 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
             ps.setString(1,reimb_id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                reimburse.add(new Reimbursements(rs.getString("reimb_id"), rs.getDouble("amount"),
-                        rs.getTimestamp("submitted"), rs.getTimestamp("resolved"),
-                        rs.getString("description"),
-                        rs.getString("payment_id"), rs.getString("author_id"),
-                        rs.getString("resolver_id"), rs.getString("status_id"),
+                reimburse.add(new Reimbursements( rs.getDouble("amount"),
+                        rs.getDate("submitted"),
+                        rs.getString("description"),  rs.getString("status_id"),
                         rs.getString("type_id")
                 ));
             }
@@ -150,7 +144,7 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
         return reimburse;
     }
 
-    public void updatePendingReimburse(Double amount, String reimb_id, String description){
+    public void updatePendingReimburse(double amount, String reimb_id, String description){
         try (Connection con = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement ps = con.prepareStatement("UPDATE ers_reimbursements SET amount = ? , description = ? WHERE reimb_id = ?");
             ps.setDouble(1, amount);
@@ -170,11 +164,9 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 Reimbursements userAll = new Reimbursements(
-                        rs.getString("reimb_id"), rs.getDouble("amount"),
-                        rs.getTimestamp("submitted"), rs.getTimestamp("resolved"),
-                        rs.getString("description"),
-                        rs.getString("payment_id"), rs.getString("author_id"),
-                        rs.getString("resolver_id"), rs.getString("status_id"),
+                         rs.getDouble("amount"),
+                        rs.getDate("submitted"),
+                        rs.getString("description"),  rs.getString("status_id"),
                         rs.getString("type_id")
                 );
                 allUser.add(userAll);

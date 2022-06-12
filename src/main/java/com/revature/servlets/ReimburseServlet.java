@@ -1,28 +1,21 @@
 package com.revature.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.dtos.requests.ActiveRequest;
-import com.revature.dtos.requests.ChangePassRequest;
-import com.revature.dtos.requests.NewReimburseRequest;
-import com.revature.dtos.requests.UpdatePendingRequest;
+import com.revature.dtos.requests.*;
 import com.revature.dtos.responses.Principle;
 import com.revature.models.Reimbursements;
-import com.revature.models.Users;
 import com.revature.services.ReimbursementService;
 import com.revature.services.TokenService;
 import com.revature.util.annotations.Inject;
 import com.revature.util.exceptions.AuthenticationException;
 import com.revature.util.exceptions.InvalidRequestException;
-import com.revature.util.exceptions.ResourceConflictException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ReimburseServlet extends HttpServlet {
     @Inject
@@ -39,7 +32,6 @@ public class ReimburseServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try{
-            NewReimburseRequest request = mapper.readValue(req.getInputStream(), NewReimburseRequest.class);
             Principle requestor = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
             //check authorization
             if (requestor == null){
@@ -50,10 +42,20 @@ public class ReimburseServlet extends HttpServlet {
                 resp.setStatus(403);
                 return;
             }
-            Reimbursements newReimburse = reimbursementService.saveReimbursement(request);
-            resp.setStatus(201);
-            resp.setContentType("application/json");
-            resp.getWriter().write(mapper.writeValueAsString(newReimburse.getStatus_id()));
+            if(req.getPathInfo().equals("/edit-reimbursement")){
+                UpdatePendingRequest updatePendingRequest = mapper.readValue(req.getInputStream(), UpdatePendingRequest.class);
+                reimbursementService.updatePending(updatePendingRequest.getAmount(), updatePendingRequest.getReimb_id(), updatePendingRequest.getDescription());
+                resp.setStatus(201);
+                resp.setContentType("application/json");
+                resp.getWriter().write(mapper.writeValueAsString(updatePendingRequest));
+            }
+            if(req.getPathInfo().equals("/new-reimbursement")){
+                NewReimburseRequest request = mapper.readValue(req.getInputStream(), NewReimburseRequest.class);
+                reimbursementService.saveReimbursement(request);
+                resp.setStatus(201);
+                resp.setContentType("application/json");
+                resp.getWriter().write(mapper.writeValueAsString(request));
+            }
         }catch (InvalidRequestException e){
             resp.setStatus(404);
         }
@@ -77,14 +79,17 @@ public class ReimburseServlet extends HttpServlet {
             }
             if(req.getPathInfo().equals("/edit-reimbursement")){
                 UpdatePendingRequest updatePendingRequest = mapper.readValue(req.getInputStream(), UpdatePendingRequest.class);
-                reimbursementService.updatePending(updatePendingRequest);
+                reimbursementService.updatePending(updatePendingRequest.getAmount(), updatePendingRequest.getReimb_id(), updatePendingRequest.getDescription());
+                resp.setStatus(201);
                 resp.setContentType("application/json");
-                resp.getWriter().write(mapper.writeValueAsString(updatePendingRequest.getDescription()));
+                resp.getWriter().write(mapper.writeValueAsString(updatePendingRequest));
             }
         }catch (InvalidRequestException e){
             resp.setStatus(404);
         }catch (AuthenticationException e){
+            e.printStackTrace();
             resp.setStatus(401);
+
         }
         catch (Exception e){
             e.printStackTrace();
@@ -107,16 +112,23 @@ public class ReimburseServlet extends HttpServlet {
                 return;
             }
             if (requester.getRole().equals("FINANCIAL MANAGER")) { // if Financial Manager then can View all pending
-                List <Reimbursements> allPending = reimbursementService.getByStatus("P");
+                List <Reimbursements> allPending = reimbursementService.getByStatus("tUwkJ7T8wA");
                 resp.setContentType("application/json");
                 resp.getWriter().write(mapper.writeValueAsString(allPending));
-                return;
+                //return;
+            }
+            if(req.getPathInfo().equals("/history")){
+                List<Reimbursements> history = reimbursementService.getAllUserRs(requester.getUsername());
+                resp.setContentType("application/json");
+                resp.getWriter().write(mapper.writeValueAsString(history));
+            }
+            if (req.getPathInfo().equals("/pending")){
+                List<Reimbursements> pending = reimbursementService.getPendingByUser(requester.getUsername());
+                resp.setContentType("application/json");
+                resp.getWriter().write(mapper.writeValueAsString(pending));
             }
 
-            List<Reimbursements> pendingReimburse = reimbursementService.getPendingByUser(requester.getUsername());
-            //pendingReimburse = pendingReimburse.stream().sorted(Comparator.comparing(Reimbursements::getSubmitted)).collect(Collectors.toList());
-            resp.setContentType("application/json");
-            resp.getWriter().write(mapper.writeValueAsString(pendingReimburse));
+
         }catch (Exception e){
             e.printStackTrace();
             resp.setStatus(500);

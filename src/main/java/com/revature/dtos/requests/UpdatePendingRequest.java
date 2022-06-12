@@ -4,7 +4,6 @@ public class UpdatePendingRequest {
     private double amount;
     private String reimb_id;
     private String description;
-    private String status_id;
 
     public UpdatePendingRequest(){super();}
 
@@ -38,13 +37,6 @@ public class UpdatePendingRequest {
         this.description = description;
     }
 
-    public String getStatus_id() {
-        return status_id;
-    }
-
-    public void setStatus_id(String status_id) {
-        this.status_id = status_id;
-    }
 
     @Override
     public String toString() {
@@ -52,7 +44,6 @@ public class UpdatePendingRequest {
                 "amount=" + amount +
                 ", reimb_id='" + reimb_id + '\'' +
                 ", description='" + description + '\'' +
-                ", status_id='" + status_id + '\'' +
                 '}';
     }
 }

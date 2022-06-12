@@ -31,7 +31,7 @@ public class ContextLoaderListener implements ServletContextListener {
         //Dependency injection to initialize user servlet
         UserServlet userServlet = new UserServlet(objectMapper, new UserService(new UserDAO()), new TokenService(new JwtConfig()));
         AuthServlet authServlet = new AuthServlet(objectMapper, new UserService(new UserDAO()), new TokenService(new JwtConfig()));
-        HistoryServlet historyServlet = new HistoryServlet(objectMapper, new ReimbursementService(new ReimbursementDAO()), new TokenService(new JwtConfig()));
+        //HistoryServlet historyServlet = new HistoryServlet(objectMapper, new ReimbursementService(new ReimbursementDAO()), new TokenService(new JwtConfig()));
         ReimburseServlet reimburseServlet = new ReimburseServlet(objectMapper, new ReimbursementService(new ReimbursementDAO()), new TokenService(new JwtConfig()));
 
         
@@ -45,7 +45,8 @@ public class ContextLoaderListener implements ServletContextListener {
 
 
         context.addServlet("ReimburseServlet",reimburseServlet).addMapping("/reimbursement/*");
-        context.addServlet("HistoryServlet", historyServlet).addMapping("/history/*");
+
+
 
         
   context.addServlet("AdminServlet", adminServlet).addMapping("/admin/*");
