@@ -2,6 +2,7 @@ package com.revature.services;
 
 import com.revature.dao.ReimbursementDAO;
 import com.revature.dtos.requests.NewReimburseRequest;
+import com.revature.dtos.responses.UserReimburse;
 import com.revature.models.Reimbursements;
 import com.revature.util.annotations.Inject;
 
@@ -31,8 +32,8 @@ public class ReimbursementService {
     public List<Reimbursements> getByType(String type_id){return reimbursementDAO.getReimburseByType(type_id);}
     public List<Reimbursements> getByStatus(String status_id){return reimbursementDAO.getReimburseByStatus(status_id);}
     public List<Reimbursements> getDetailsByRemID(String reimb_id){return reimbursementDAO.getDetailsByReimburseID(reimb_id);}
-    public List<Reimbursements> getPendingByUser(String author_id){return reimbursementDAO.getPendingByUser(author_id);}
+    public List<UserReimburse> getUserPending(String author_id){return  reimbursementDAO.getPendingByUser(author_id);}
+    public List<UserReimburse> getUserReimburseAll(String author_id){return reimbursementDAO.getAllByUser(author_id);}
     public void updatePending (double amount, String reimb_id, String description){reimbursementDAO.updatePendingReimburse(amount,reimb_id,description);}
 
-    public List<Reimbursements> getAllUserRs(String author_id){return reimbursementDAO.getAllByUser(author_id);}
 }

@@ -112,20 +112,16 @@ public class ReimburseServlet extends HttpServlet {
                 return;
             }
             if (requester.getRole().equals("FINANCIAL MANAGER")) { // if Financial Manager then can View all pending
-                List <Reimbursements> allPending = reimbursementService.getByStatus("tUwkJ7T8wA");
-                resp.setContentType("application/json");
-                resp.getWriter().write(mapper.writeValueAsString(allPending));
-                //return;
+                resp.setStatus(403);
+                return;
             }
             if(req.getPathInfo().equals("/history")){
-                List<Reimbursements> history = reimbursementService.getAllUserRs(requester.getUsername());
                 resp.setContentType("application/json");
-                resp.getWriter().write(mapper.writeValueAsString(history));
+                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getUserReimburseAll(requester.getUsername())));
             }
             if (req.getPathInfo().equals("/pending")){
-                List<Reimbursements> pending = reimbursementService.getPendingByUser(requester.getUsername());
                 resp.setContentType("application/json");
-                resp.getWriter().write(mapper.writeValueAsString(pending));
+                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getUserPending(requester.getUsername())));
             }
 
 
