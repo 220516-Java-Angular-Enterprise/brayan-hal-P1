@@ -14,11 +14,7 @@ import com.revature.services.AdminServices;
 
 import com.revature.services.TokenService;
 import com.revature.services.UserService;
-import com.revature.servlets.AdminServlet;
-import com.revature.servlets.AuthServlet;
-
-import com.revature.servlets.ReimburseServlet;
-import com.revature.servlets.UserServlet;
+import com.revature.servlets.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -35,7 +31,7 @@ public class ContextLoaderListener implements ServletContextListener {
         //Dependency injection to initialize user servlet
         UserServlet userServlet = new UserServlet(objectMapper, new UserService(new UserDAO()), new TokenService(new JwtConfig()));
         AuthServlet authServlet = new AuthServlet(objectMapper, new UserService(new UserDAO()), new TokenService(new JwtConfig()));
-
+        //HistoryServlet historyServlet = new HistoryServlet(objectMapper, new ReimbursementService(new ReimbursementDAO()), new TokenService(new JwtConfig()));
         ReimburseServlet reimburseServlet = new ReimburseServlet(objectMapper, new ReimbursementService(new ReimbursementDAO()), new TokenService(new JwtConfig()));
 
         
@@ -48,7 +44,9 @@ public class ContextLoaderListener implements ServletContextListener {
         context.addServlet("AuthServlet", authServlet).addMapping("/auth");
 
 
-        context.addServlet("ReimburseServlet",reimburseServlet).addMapping("/new-reimbursement");
+        context.addServlet("ReimburseServlet",reimburseServlet).addMapping("/reimbursement/*");
+
+
 
         
   context.addServlet("AdminServlet", adminServlet).addMapping("/admin/*");
