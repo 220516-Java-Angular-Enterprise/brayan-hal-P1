@@ -1,7 +1,7 @@
 package com.revature.models;
 
 import java.sql.Timestamp;
-import java.util.Date;
+import java.sql.Date;
 
 public class Reimbursements {
     private String reimb_id;
@@ -22,7 +22,7 @@ public class Reimbursements {
         this.type_id = type_id;
     }
 
-    public Reimbursements(double amount, Timestamp submitted, String description, String author_id, String status_id, String type_id) {
+    public Reimbursements(double amount, Date submitted, String description, String author_id, String status_id, String type_id) {
         this.amount = amount;
         this.submitted = submitted;
         this.description = description;
@@ -31,15 +31,12 @@ public class Reimbursements {
         this.type_id = type_id;
     }
 
-    public Reimbursements(String reimb_id, double amount, Timestamp submitted, Timestamp resolved, String description, String payment_id, String author_id, String resolver_id, String status_id, String type_id) {
-        this.reimb_id = reimb_id;
+
+
+    public Reimbursements(double amount, java.sql.Date submitted, String description, String status_id, String type_id) {
         this.amount = amount;
         this.submitted = submitted;
-        this.resolved = resolved;
         this.description = description;
-        this.payment_id = payment_id;
-        this.author_id = author_id;
-        this.resolver_id = resolver_id;
         this.status_id = status_id;
         this.type_id = type_id;
     }
