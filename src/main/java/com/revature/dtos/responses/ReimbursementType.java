@@ -47,4 +47,15 @@ public class ReimbursementType {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "ReimbursementType{" +
+                "reimb_id='" + reimb_id + '\'' +
+                ", author='" + author + '\'' +
+                ", description='" + description + '\'' +
+                ", type='" + type + '\'' +
+                '}';
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.revature.dao;
 
+import com.revature.dtos.responses.ReimbursementStatus;
+import com.revature.dtos.responses.ReimbursementType;
 import com.revature.models.Reimbursements;
 import com.revature.util.database.ConnectionFactory;
 
@@ -31,22 +33,38 @@ public class FinanceDAO implements ICrudDAO<Reimbursements>{
         return null;
     }
 
-    public void changeStatus(Reimbursements obj){
+    public void changeStatus(String status, String reimb_id){
+        switch(status){
+            case "APPROVED":
+                status = "tUwkJ7H9wB";
+                break;
+            case "PENDING":
+                status = "tUwkJ7H9wA";
+                break;
+            case "DENIED":
+                status = "tUwkJ7X0wC";
+                break;
+        }
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps = con.prepareStatement("update ers_reimbursements")
+            PreparedStatement ps = con.prepareStatement("update ers_reimbursements set status_id = ? where reimb_id = ?");
+            ps.setString(1, status);
+            ps.setString(2, reimb_id);
+            ps.executeUpdate();
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
     }
 
-    public List<Reimbursements> getAllPending(){
-        List<Reimbursements> pending = new ArrayList<>();
+    public List<ReimbursementStatus> getAllPending(){
+        List<ReimbursementStatus> pending = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps =  con.prepareStatement("select * from ers_reimbursements as er inner join  \n" +
-                    "ers_reimbursement_statuses as es on er.status_id = es.status_id where status = 'PENDING'");
+            PreparedStatement ps =  con.prepareStatement("select reimb_id, username, description, status  from ers_reimbursements as er \n" +
+                    "inner join ers_reimbursement_statuses as es on er.status_id = es.status_id \n" +
+                    "inner join ers_users as eu on er.author_id = eu.user_id where status = 'PENDING'");
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                //pending.add(new Reimbursements());
+                pending.add(new ReimbursementStatus(rs.getString("reimb_id"),rs.getString("username"),
+                        rs.getString("description"), rs.getString("status")));
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
@@ -54,14 +72,17 @@ public class FinanceDAO implements ICrudDAO<Reimbursements>{
         return pending;
     }
 
-    public List<Reimbursements> getAllApproved(){
-        List<Reimbursements> approved = new ArrayList<>();
+
+    public List<ReimbursementStatus> getAllApproved(){
+        List<ReimbursementStatus> approved = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps =  con.prepareStatement("select * from ers_reimbursements as er inner join  \n" +
-                    "ers_reimbursement_statuses as es on er.status_id = es.status_id where status = 'APPROVED'");
+            PreparedStatement ps =  con.prepareStatement("select reimb_id, username, description, status  from ers_reimbursements as er \n" +
+                    "inner join ers_reimbursement_statuses as es on er.status_id = es.status_id \n" +
+                    "inner join ers_users as eu on er.author_id = eu.user_id where status = 'APPROVED'");
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                //approved.add(new Reimbursements());
+                approved.add(new ReimbursementStatus(rs.getString("reimb_id"),rs.getString("username"),
+                                        rs.getString("description"), rs.getString("status")));
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
@@ -69,14 +90,16 @@ public class FinanceDAO implements ICrudDAO<Reimbursements>{
         return approved;
     }
 
-    public List<Reimbursements> getAllDeclined(){
-        List<Reimbursements> declined = new ArrayList<>();
+    public List<ReimbursementStatus> getAllDeclined(){
+        List<ReimbursementStatus> declined = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps =  con.prepareStatement("select * from ers_reimbursements as er inner join  \n" +
-                    "ers_reimbursement_statuses as es on er.status_id = es.status_id where status = 'DECLINED'");
+            PreparedStatement ps =  con.prepareStatement("select reimb_id, username, description, status  from ers_reimbursements as er \n" +
+                    "inner join ers_reimbursement_statuses as es on er.status_id = es.status_id \n" +
+                    "inner join ers_users as eu on er.author_id = eu.user_id where status = 'DECLINED'");
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                //declined.add(new Reimbursements());
+                declined.add(new ReimbursementStatus(rs.getString("reimb_id"),rs.getString("username"),
+                        rs.getString("description"), rs.getString("status")));
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
@@ -84,14 +107,16 @@ public class FinanceDAO implements ICrudDAO<Reimbursements>{
         return declined;
     }
 
-    public List<Reimbursements> getAllLodging(){
-        List<Reimbursements> lodging = new ArrayList<>();
+    public List<ReimbursementType> getAllLodging(){
+        List<ReimbursementType> lodging = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps =  con.prepareStatement("select * from ers_reimbursements as er inner join  \n" +
-                    "ers_reimbursement_types as et on er.type_id = et.type_id where type = 'LODGING'");
+            PreparedStatement ps =  con.prepareStatement("select reimb_id, username, description, type  from ers_reimbursements as er \n" +
+                    "inner join ers_reimbursement_types as et on er.type_id = et.type_id \n" +
+                    "inner join ers_users as eu on er.author_id = eu.user_id where type = 'LODGING'");
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                //lodging.add(new Reimbursements());
+                lodging.add(new ReimbursementType(rs.getString("reimb_id"),rs.getString("username"),
+                        rs.getString("description"), rs.getString("type")));
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
@@ -99,14 +124,17 @@ public class FinanceDAO implements ICrudDAO<Reimbursements>{
         return lodging;
     }
 
-    public List<Reimbursements> getAllTravel(){
-        List<Reimbursements> travel = new ArrayList<>();
+
+    public List<ReimbursementType> getAllTravel(){
+        List<ReimbursementType> travel = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps =  con.prepareStatement("select * from ers_reimbursements as er inner join  \n" +
-                    "ers_reimbursement_types as et on er.type_id = et.type_id where type = 'TRAVEL'");
+            PreparedStatement ps =  con.prepareStatement("select reimb_id, username, description, type  from ers_reimbursements as er \n" +
+                    "inner join ers_reimbursement_types as et on er.type_id = et.type_id \n" +
+                    "inner join ers_users as eu on er.author_id = eu.user_id where type = 'TRAVEL'");
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                //travel.add(new Reimbursements());
+                travel.add(new ReimbursementType(rs.getString("reimb_id"),rs.getString("username"),
+                        rs.getString("description"), rs.getString("type")));
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
@@ -114,14 +142,17 @@ public class FinanceDAO implements ICrudDAO<Reimbursements>{
         return travel;
     }
 
-    public List<Reimbursements> getAllFood(){
-        List<Reimbursements> food = new ArrayList<>();
+
+    public List<ReimbursementType> getAllFood(){
+        List<ReimbursementType> food = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps =  con.prepareStatement("select * from ers_reimbursements as er inner join  \n" +
-                    "ers_reimbursement_types as et on er.type_id = et.type_id where type = 'FOOD'");
+            PreparedStatement ps =  con.prepareStatement("select reimb_id, username, description, type  from ers_reimbursements as er \n" +
+                    "inner join ers_reimbursement_types as et on er.type_id = et.type_id \n" +
+                    "inner join ers_users as eu on er.author_id = eu.user_id where type = 'FOOD'");
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                //food.add(new Reimbursements());
+                food.add(new ReimbursementType(rs.getString("reimb_id"),rs.getString("username"),
+                        rs.getString("description"), rs.getString("type")));
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
@@ -129,14 +160,17 @@ public class FinanceDAO implements ICrudDAO<Reimbursements>{
         return food;
     }
 
-    public List<Reimbursements> getAllOther(){
-        List<Reimbursements> other = new ArrayList<>();
+
+    public List<ReimbursementType> getAllOther(){
+        List<ReimbursementType> other = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps =  con.prepareStatement("select * from ers_reimbursements as er inner join  \n" +
-                    "ers_reimbursement_types as et on er.type_id = et.type_id where type = 'OTHER'");
+            PreparedStatement ps =  con.prepareStatement("select reimb_id, username, description, type  from ers_reimbursements as er \n" +
+                    "inner join ers_reimbursement_types as et on er.type_id = et.type_id \n" +
+                    "inner join ers_users as eu on er.author_id = eu.user_id where type = 'OTHER'");
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                //other.add(new Reimbursements());
+                other.add(new ReimbursementType(rs.getString("reimb_id"),rs.getString("username"),
+                        rs.getString("description"), rs.getString("type")));
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());

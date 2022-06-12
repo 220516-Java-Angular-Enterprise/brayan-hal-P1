@@ -3,17 +3,12 @@ package com.revature.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-import com.revature.dao.ReimbursementDAO;
+import com.revature.dao.*;
+
+import com.revature.services.*;
+
 import com.revature.dao.UserDAO;
 
-import com.revature.services.ReimbursementService;
-
-import com.revature.dao.AdminDAO;
-import com.revature.dao.UserDAO;
-import com.revature.services.AdminServices;
-
-import com.revature.services.TokenService;
-import com.revature.services.UserService;
 import com.revature.servlets.*;
 
 import javax.servlet.ServletContext;
@@ -35,8 +30,10 @@ public class ContextLoaderListener implements ServletContextListener {
         ReimburseServlet reimburseServlet = new ReimburseServlet(objectMapper, new ReimbursementService(new ReimbursementDAO()), new TokenService(new JwtConfig()));
 
         
-  AdminServlet adminServlet = new AdminServlet(objectMapper, new AdminServices(new AdminDAO()), new TokenService(new JwtConfig()));
+        AdminServlet adminServlet = new AdminServlet(objectMapper, new AdminServices(new AdminDAO()), new TokenService(new JwtConfig()));
 
+
+        FinanceServlet financeServlet = new FinanceServlet(objectMapper, new FinanceService(new FinanceDAO()), new TokenService(new JwtConfig()));
 
         /* Need ServletContext class to map whatever servlet to url path. */
         ServletContext context = sce.getServletContext();
@@ -47,9 +44,9 @@ public class ContextLoaderListener implements ServletContextListener {
         context.addServlet("ReimburseServlet",reimburseServlet).addMapping("/reimbursement/*");
 
 
-
+        context.addServlet("FinanceServlet", financeServlet).addMapping("/finance/*");
         
-  context.addServlet("AdminServlet", adminServlet).addMapping("/admin/*");
+        context.addServlet("AdminServlet", adminServlet).addMapping("/admin/*");
 
     }
 
