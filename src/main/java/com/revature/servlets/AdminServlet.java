@@ -7,6 +7,7 @@ import com.revature.dtos.requests.ChangePassRequest;
 import com.revature.dtos.responses.Principle;
 import com.revature.services.AdminServices;
 import com.revature.services.TokenService;
+import com.revature.util.annotations.Inject;
 import com.revature.util.exceptions.AuthenticationException;
 import com.revature.util.exceptions.InvalidRequestException;
 
@@ -19,10 +20,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AdminServlet extends HttpServlet {
+    @Inject
     private final ObjectMapper objectMapper;
     private final AdminServices adminServices;
     private final TokenService tokenService;
 
+    @Inject
     public AdminServlet(ObjectMapper objectMapper, AdminServices adminServices, TokenService tokenService) {
         this.objectMapper = objectMapper;
         this.adminServices = adminServices;
