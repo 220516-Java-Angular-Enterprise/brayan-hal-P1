@@ -125,6 +125,31 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
         }
         return pendingReimburses;
     }
+
+
+    public List<UserReimburse> getNewPendingFirst(String author_id){
+        List<UserReimburse> pendingReimburses2 = new ArrayList<>();
+        try(Connection con = ConnectionFactory.getInstance().getConnection()){
+            PreparedStatement ps = con.prepareStatement("SELECT amount, submitted, description, ers.status, ert.\"type\" \n" +
+                    "FROM ers_reimbursements er\n" +
+                    "inner join ers_reimbursement_statuses ers on er.status_id = ers.status_id \n" +
+                    "inner join ers_reimbursement_types ert on er.type_id = ert.type_id \n" +
+                    "WHERE author_id = ? AND er.status_id = 'tUwkJ7T8wA'\n" +
+                    "order by er.submitted desc;");
+            ps.setString(1,author_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                pendingReimburses2.add(new UserReimburse((rs.getDouble("amount")),
+                        rs.getDate("submitted"), rs.getString("description"), rs.getString("status"),
+                        rs.getString("type")
+                ));
+            }
+        }catch (SQLException e){
+            throw new InvalidSQLException("An error occurred retrieving these forms");
+        }
+        return pendingReimburses2;
+    }
+
     ///view all details by its ID//
     public List<Reimbursements> getDetailsByReimburseID(String reimb_id){
         List<Reimbursements> reimburse = new ArrayList<>();
@@ -164,7 +189,7 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
                     "FROM ers_reimbursements er\n" +
                     "inner join ers_reimbursement_statuses ers on er.status_id = ers.status_id \n" +
                     "inner join ers_reimbursement_types ert on er.type_id = ert.type_id \n" +
-                    "WHERE author_id = ? ");
+                    "WHERE author_id = ? \n");
             ps.setString(1,author_id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
@@ -177,6 +202,28 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
             System.out.println(e.getMessage());
         }
         return allUser;
+    }
+    public List<UserReimburse> getUserAllNewFirst(String author_id){
+        List<UserReimburse> allUser2 = new ArrayList<>();
+        try (Connection con = ConnectionFactory.getInstance().getConnection()){
+            PreparedStatement ps = con.prepareStatement("SELECT amount, submitted, description, ers.status, ert.\"type\" \n" +
+                    "FROM ers_reimbursements er\n" +
+                    "inner join ers_reimbursement_statuses ers on er.status_id = ers.status_id \n" +
+                    "inner join ers_reimbursement_types ert on er.type_id = ert.type_id \n" +
+                    "WHERE author_id = ?\n" +
+                    "order by er.submitted desc;");
+            ps.setString(1,author_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                allUser2.add(new UserReimburse((rs.getDouble("amount")),
+                        rs.getDate("submitted"), rs.getString("description"), rs.getString("status"),
+                        rs.getString("type")
+                ));
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return allUser2;
     }
 
 

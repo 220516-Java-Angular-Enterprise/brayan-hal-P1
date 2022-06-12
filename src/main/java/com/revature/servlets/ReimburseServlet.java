@@ -3,6 +3,7 @@ package com.revature.servlets;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.dtos.requests.*;
 import com.revature.dtos.responses.Principle;
+import com.revature.dtos.responses.UserReimburse;
 import com.revature.models.Reimbursements;
 import com.revature.services.ReimbursementService;
 import com.revature.services.TokenService;
@@ -117,9 +118,17 @@ public class ReimburseServlet extends HttpServlet {
             }
             if(req.getPathInfo().equals("/history")){
                 resp.setContentType("application/json");
+                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getUsersNewFirst(requester.getUsername())));
+            }
+            if(req.getPathInfo().equals("/historyOldest")){
+                resp.setContentType("application/json");
                 resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getUserReimburseAll(requester.getUsername())));
             }
             if (req.getPathInfo().equals("/pending")){
+                resp.setContentType("application/json");
+                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getPendingNewFirst(requester.getUsername())));
+            }
+            if(req.getPathInfo().equals("/pendingOldest")){
                 resp.setContentType("application/json");
                 resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getUserPending(requester.getUsername())));
             }

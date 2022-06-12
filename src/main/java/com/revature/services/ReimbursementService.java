@@ -6,7 +6,7 @@ import com.revature.dtos.responses.UserReimburse;
 import com.revature.models.Reimbursements;
 import com.revature.util.annotations.Inject;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +24,7 @@ public class ReimbursementService {
         Reimbursements reimbursements = new Reimbursements(request.getAmount(),request.getDescription(),request.getType_id(), request.getAuthor_id());
         reimbursements.setReimb_id(UUID.randomUUID().toString());
         reimbursements.setStatus_id("tUwkJ7T8wA");
-        reimbursements.setSubmitted((java.sql.Date) new Date(now));
+        reimbursements.setSubmitted(new Date(now));
         reimbursementDAO.save(reimbursements);
         return reimbursements;
     }
@@ -34,6 +34,8 @@ public class ReimbursementService {
     public List<Reimbursements> getDetailsByRemID(String reimb_id){return reimbursementDAO.getDetailsByReimburseID(reimb_id);}
     public List<UserReimburse> getUserPending(String author_id){return  reimbursementDAO.getPendingByUser(author_id);}
     public List<UserReimburse> getUserReimburseAll(String author_id){return reimbursementDAO.getAllByUser(author_id);}
+    public List<UserReimburse> getUsersNewFirst(String author_id){return reimbursementDAO.getUserAllNewFirst(author_id);}
+    public List<UserReimburse> getPendingNewFirst (String author_id){return reimbursementDAO.getNewPendingFirst(author_id);}
     public void updatePending (double amount, String reimb_id, String description){reimbursementDAO.updatePendingReimburse(amount,reimb_id,description);}
 
 }
