@@ -18,7 +18,6 @@ import java.io.IOException;
 
 public class AuthServlet extends HttpServlet {
     @Inject
-
     private final ObjectMapper mapper;
     private final UserService userService;
     private final TokenService tokenService;
@@ -29,6 +28,7 @@ public class AuthServlet extends HttpServlet {
         tokenService = null;
     }
 
+    @Inject
     public AuthServlet(ObjectMapper mapper, UserService userService, TokenService tokenService) {
         this.mapper = mapper;
         this.userService = userService;
