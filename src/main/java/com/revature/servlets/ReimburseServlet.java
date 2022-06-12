@@ -1,13 +1,17 @@
 package com.revature.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.dtos.requests.ActiveRequest;
+import com.revature.dtos.requests.ChangePassRequest;
 import com.revature.dtos.requests.NewReimburseRequest;
+import com.revature.dtos.requests.UpdatePendingRequest;
 import com.revature.dtos.responses.Principle;
 import com.revature.models.Reimbursements;
 import com.revature.models.Users;
 import com.revature.services.ReimbursementService;
 import com.revature.services.TokenService;
 import com.revature.util.annotations.Inject;
+import com.revature.util.exceptions.AuthenticationException;
 import com.revature.util.exceptions.InvalidRequestException;
 import com.revature.util.exceptions.ResourceConflictException;
 
@@ -61,29 +65,62 @@ public class ReimburseServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp);
+        try {
+            Principle requester = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
+            if(requester == null){
+                resp.setStatus(401);//unathorized
+                return;
+            }
+            if(requester.getRole().equals("ADMIN")){
+                resp.setStatus(403);//forbidden
+                return;
+            }
+            if(req.getPathInfo().equals("/edit-reimbursement")){
+                UpdatePendingRequest updatePendingRequest = mapper.readValue(req.getInputStream(), UpdatePendingRequest.class);
+                reimbursementService.updatePending(updatePendingRequest);
+                resp.setContentType("application/json");
+                resp.getWriter().write(mapper.writeValueAsString(updatePendingRequest.getDescription()));
+            }
+        }catch (InvalidRequestException e){
+            resp.setStatus(404);
+        }catch (AuthenticationException e){
+            resp.setStatus(401);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            resp.setStatus(500);
+        }
     }
 
     //view pending reimbursement
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Principle requester = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
-        if (requester == null){
-            resp.setStatus(401); // UNAUTHORIZED
-            return;
+        try {
+            Principle requester = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
+            if (requester == null){
+                resp.setStatus(401); // UNAUTHORIZED
+                return;
+            }
+            if (requester.getRole().equals("ADMIN")) {
+                resp.setStatus(403); //forbidden
+                //Admin are not allowed to look at these
+                return;
+            }
+            if (requester.getRole().equals("FINANCIAL MANAGER")) { // if Financial Manager then can View all pending
+                List <Reimbursements> allPending = reimbursementService.getByStatus("P");
+                resp.setContentType("application/json");
+                resp.getWriter().write(mapper.writeValueAsString(allPending));
+                return;
+            }
+
+            List<Reimbursements> pendingReimburse = reimbursementService.getPendingByUser(requester.getUsername());
+            //pendingReimburse = pendingReimburse.stream().sorted(Comparator.comparing(Reimbursements::getSubmitted)).collect(Collectors.toList());
+            resp.setContentType("application/json");
+            resp.getWriter().write(mapper.writeValueAsString(pendingReimburse));
+        }catch (Exception e){
+            e.printStackTrace();
+            resp.setStatus(500);
         }
-        if (requester.getRole().equals("FINANCIAL MANAGER")) {
-            // if Financial Manager then can View all pending
-            return;
-        }
-        if (requester.getRole().equals("ADMIN")) {
-            resp.setStatus(403); //forbidden
-            //Admin are not allowed to look at these
-            return;
-        }
-        List<Reimbursements> pendingReimburse = reimbursementService.getPendingByUser(requester.getUsername());
-        //pendingReimburse = pendingReimburse.stream().sorted(Comparator.comparing(Reimbursements::getSubmitted)).collect(Collectors.toList());
-        resp.setContentType("application/json");
-        resp.getWriter().write(mapper.writeValueAsString(pendingReimburse));
     }
+
 }
