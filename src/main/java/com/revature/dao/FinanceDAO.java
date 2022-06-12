@@ -72,6 +72,7 @@ public class FinanceDAO implements ICrudDAO<Reimbursements>{
         return pending;
     }
 
+
     public List<ReimbursementStatus> getAllApproved(){
         List<ReimbursementStatus> approved = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
@@ -123,6 +124,7 @@ public class FinanceDAO implements ICrudDAO<Reimbursements>{
         return lodging;
     }
 
+
     public List<ReimbursementType> getAllTravel(){
         List<ReimbursementType> travel = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
@@ -140,6 +142,7 @@ public class FinanceDAO implements ICrudDAO<Reimbursements>{
         return travel;
     }
 
+
     public List<ReimbursementType> getAllFood(){
         List<ReimbursementType> food = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
@@ -156,6 +159,7 @@ public class FinanceDAO implements ICrudDAO<Reimbursements>{
         }
         return food;
     }
+
 
     public List<ReimbursementType> getAllOther(){
         List<ReimbursementType> other = new ArrayList<>();
