@@ -40,6 +40,7 @@ public class AdminServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try{
+            System.out.println(req.getRequestURI());
             Principle requester = tokenService.extractRequesterDetails(req.getHeader("Authorization"));
             if(requester == null){
                 resp.setStatus(401);//unathorized
@@ -49,6 +50,8 @@ public class AdminServlet extends HttpServlet {
                 resp.setStatus(403);//forbidden
                 return;
             }
+
+
             if(req.getPathInfo().equals("/status")){
                 ActiveRequest activeRequest = objectMapper.readValue(req.getInputStream(), ActiveRequest.class);
                 adminServices.changeStatus(activeRequest);

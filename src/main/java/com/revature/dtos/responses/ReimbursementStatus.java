@@ -47,4 +47,14 @@ public class ReimbursementStatus {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "ReimbursementStatus{" +
+                "reimb_id='" + reimb_id + '\'' +
+                ", author='" + author + '\'' +
+                ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }
