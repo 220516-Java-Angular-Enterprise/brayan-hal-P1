@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class FinanceDAO implements ICrudDAO<Reimbursements>{
     @Override
@@ -33,7 +34,7 @@ public class FinanceDAO implements ICrudDAO<Reimbursements>{
         return null;
     }
 
-    public void changeStatus(String status, String reimb_id){
+    public void changeStatus(String status, String reimb_id, String resolver_id){
         switch(status){
             case "APPROVED":
                 status = "tUwkJ7H9wB";
@@ -44,11 +45,17 @@ public class FinanceDAO implements ICrudDAO<Reimbursements>{
             case "DENIED":
                 status = "tUwkJ7X0wC";
                 break;
+            default:
+                System.out.println("Invalid choice");
+                break;
         }
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps = con.prepareStatement("update ers_reimbursements set status_id = ? where reimb_id = ?");
+            PreparedStatement ps = con.prepareStatement("update ers_reimbursements set status_id = ?, resolver_id =?, " +
+                    "resolved = current_date, payment_id = ? where reimb_id = ?");
             ps.setString(1, status);
-            ps.setString(2, reimb_id);
+            ps.setString(2, resolver_id);
+            ps.setString(3, UUID.randomUUID().toString());
+            ps.setString(4, reimb_id);
             ps.executeUpdate();
         }catch(SQLException e){
             System.out.println(e.getMessage());
@@ -95,7 +102,7 @@ public class FinanceDAO implements ICrudDAO<Reimbursements>{
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement ps =  con.prepareStatement("select reimb_id, username, description, status  from ers_reimbursements as er \n" +
                     "inner join ers_reimbursement_statuses as es on er.status_id = es.status_id \n" +
-                    "inner join ers_users as eu on er.author_id = eu.user_id where status = 'DECLINED'");
+                    "inner join ers_users as eu on er.author_id = eu.user_id where status = 'DENIED'");
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 declined.add(new ReimbursementStatus(rs.getString("reimb_id"),rs.getString("username"),
