@@ -54,18 +54,31 @@ public class UserService {
     }
 
     public boolean isValidUsername(String username){
+        if(username == ""){
+            throw new InvalidRequestException();
+        }
         return username.matches("^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$");
     }
 
     public boolean isValidPassword(String password){
+        if(password == ""){
+            throw new InvalidRequestException();
+        }
         return password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$");
     }
 
     public boolean isNotDuplicateUsername(String username){
+        if(userDAO.getAllUsernames().contains(username)){
+            throw new ResourceConflictException();
+        }
         return !userDAO.getAllUsernames().contains(username);
     }
 
-    public boolean isNotDuplicateEmail(String email){return !userDAO.getAllEmails().contains(email);}
+    public boolean isNotDuplicateEmail(String email){
+        if (userDAO.getAllEmails().contains(email)){
+            throw new ResourceConflictException();
+        }
+        return !userDAO.getAllEmails().contains(email);}
 
     private Users isValidCredentials(Users user) {
         if (user.getUsername() == null && user.getPassword() == null)

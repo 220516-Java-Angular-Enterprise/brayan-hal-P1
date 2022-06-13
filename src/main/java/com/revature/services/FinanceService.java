@@ -6,6 +6,8 @@ import com.revature.dtos.requests.ChangeStatusRequest;
 import com.revature.dtos.responses.ReimbursementStatus;
 import com.revature.dtos.responses.ReimbursementType;
 import com.revature.util.annotations.Inject;
+import com.revature.util.exceptions.InvalidRequestException;
+import com.revature.util.exceptions.ResourceConflictException;
 
 import java.util.List;
 
@@ -30,10 +32,8 @@ public class FinanceService {
             case "travel":
                 return financeDAO.getAllTravel();
             default:
-                System.out.println("Invalid choice");
-                break;
+                throw new ResourceConflictException();
         }
-        return null;
     }
 
     public List<ReimbursementStatus> getByStatus(String status){
@@ -45,10 +45,8 @@ public class FinanceService {
             case "approved":
                 return financeDAO.getAllApproved();
             default:
-                System.out.println("Invalid choice");
-                break;
+                throw new ResourceConflictException();
         }
-        return null;
     }
 
     public void changeStatus(ChangeStatusRequest changeStatusRequest, String user_id){
