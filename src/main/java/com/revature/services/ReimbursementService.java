@@ -5,6 +5,7 @@ import com.revature.dtos.requests.NewReimburseRequest;
 import com.revature.dtos.responses.UserReimburse;
 import com.revature.models.Reimbursements;
 import com.revature.util.annotations.Inject;
+import com.revature.util.exceptions.ResourceConflictException;
 
 import java.sql.Date;
 import java.util.List;
@@ -31,11 +32,37 @@ public class ReimbursementService {
     public List<Reimbursements> getAll(){ return reimbursementDAO.getAll();}
     public List<Reimbursements> getByType(String type_id){return reimbursementDAO.getReimburseByType(type_id);}
     public List<Reimbursements> getByStatus(String status_id){return reimbursementDAO.getReimburseByStatus(status_id);}
-    public List<Reimbursements> getDetailsByRemID(String reimb_id){return reimbursementDAO.getDetailsByReimburseID(reimb_id);}
-    public List<UserReimburse> getUserPending(String author_id){return  reimbursementDAO.getPendingByUser(author_id);}
-    public List<UserReimburse> getUserReimburseAll(String author_id){return reimbursementDAO.getAllByUser(author_id);}
-    public List<UserReimburse> getUsersNewFirst(String author_id){return reimbursementDAO.getUserAllNewFirst(author_id);}
-    public List<UserReimburse> getPendingNewFirst (String author_id){return reimbursementDAO.getNewPendingFirst(author_id);}
-    public void updatePending (double amount, String reimb_id, String description){reimbursementDAO.updatePendingReimburse(amount,reimb_id,description);}
+    public List<Reimbursements> getDetailsByRemID(String reimb_id){
+        if(reimb_id == null){
+            throw new ResourceConflictException();
+        }
+        return reimbursementDAO.getDetailsByReimburseID(reimb_id);
+    }
+    public List<UserReimburse> getUserPending(String author_id){
+        if(author_id == null){
+            throw new ResourceConflictException();
+        }
+        return  reimbursementDAO.getPendingByUser(author_id);}
+    public List<UserReimburse> getUserReimburseAll(String author_id){
+        if(author_id == null){
+            throw new ResourceConflictException();
+        }
+        return reimbursementDAO.getAllByUser(author_id);}
+    public List<UserReimburse> getUsersNewFirst(String author_id){
+        if(author_id == null){
+            throw new ResourceConflictException();
+        }return reimbursementDAO.getUserAllNewFirst(author_id);}
+    public List<UserReimburse> getPendingNewFirst (String author_id){
+        if(author_id == null){
+            throw new ResourceConflictException();
+        }return reimbursementDAO.getNewPendingFirst(author_id);}
+    public void updatePending (double amount, String reimb_id, String description){
+        if(reimb_id == null){
+            throw new ResourceConflictException();
+        }
+        if(description == null){
+            throw new ResourceConflictException();
+        }
+        reimbursementDAO.updatePendingReimburse(amount,reimb_id,description);}
 
 }

@@ -118,19 +118,19 @@ public class ReimburseServlet extends HttpServlet {
             }
             if(req.getPathInfo().equals("/history")){
                 resp.setContentType("application/json");
-                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getUsersNewFirst(requester.getUsername())));
+                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getUsersNewFirst(requester.getUser_id())));
             }
             if(req.getPathInfo().equals("/historyOldest")){
                 resp.setContentType("application/json");
-                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getUserReimburseAll(requester.getUsername())));
+                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getUserReimburseAll(requester.getUser_id())));
             }
             if (req.getPathInfo().equals("/pending")){
                 resp.setContentType("application/json");
-                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getPendingNewFirst(requester.getUsername())));
+                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getPendingNewFirst(requester.getUser_id())));
             }
             if(req.getPathInfo().equals("/pendingOldest")){
                 resp.setContentType("application/json");
-                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getUserPending(requester.getUsername())));
+                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getUserPending(requester.getUser_id())));
             }
 
 
