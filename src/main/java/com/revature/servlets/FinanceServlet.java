@@ -48,17 +48,34 @@ public class FinanceServlet extends HttpServlet {
             return;
         }
 
-        if(path.contains("finance") && path.contains("status") && path.contains("pending")){
-            resp.setContentType("application/json");
-            resp.getWriter().write(objectMapper.writeValueAsString(financeService.getByStatus("pending")));
-        }else if(path.contains("finance") && path.contains("status") && path.contains("declined")){
-            resp.setContentType("application/json");
-            resp.getWriter().write(objectMapper.writeValueAsString(financeService.getByStatus("declined")));
-        }else if(path.contains("finance") && path.contains("status") && path.contains("approved")){
-            resp.setContentType("application/json");
-            resp.getWriter().write(objectMapper.writeValueAsString(financeService.getByStatus("approved")));
+        if(path.contains("finance") && path.contains("status")){
+            if(path.contains("pending")){
+                resp.setContentType("application/json");
+                resp.getWriter().write(objectMapper.writeValueAsString(financeService.getByStatus("pending")));
+            }else if(path.contains("denied")){
+                resp.setContentType("application/json");
+                resp.getWriter().write(objectMapper.writeValueAsString(financeService.getByStatus("denied")));
+            }else if(path.contains("approved")){
+                resp.setContentType("application/json");
+                resp.getWriter().write(objectMapper.writeValueAsString(financeService.getByStatus("approved")));
+            }
+        }else if(path.contains("finance") && path.contains("type")){
+            if(path.contains("lodging")){
+                resp.setContentType("application/json");
+                resp.getWriter().write(objectMapper.writeValueAsString(financeService.getByType("lodging")));
+            }else if(path.contains("food")){
+                resp.setContentType("application/json");
+                resp.getWriter().write(objectMapper.writeValueAsString(financeService.getByType("food")));
+            }else if(path.contains("travel")){
+                resp.setContentType("application/json");
+                resp.getWriter().write(objectMapper.writeValueAsString(financeService.getByType("travel")));
+            }else if(path.contains("other")){
+                resp.setContentType("application/json");
+                resp.getWriter().write(objectMapper.writeValueAsString(financeService.getByType("other")));
+            }
+        }else{
+            resp.setStatus(404);
         }
-
     }
 
     @Override
@@ -77,7 +94,7 @@ public class FinanceServlet extends HttpServlet {
         }
         if(path.contains("finance") && path.contains("changestatus")){
             ChangeStatusRequest changeStatusRequest = objectMapper.readValue(req.getInputStream(), ChangeStatusRequest.class);
-            financeService.changeStatus(changeStatusRequest);
+            financeService.changeStatus(changeStatusRequest, requester.getUser_id());
             resp.setContentType("application/json");
             resp.getWriter().write(objectMapper.writeValueAsString(changeStatusRequest.getStatus()));
         }

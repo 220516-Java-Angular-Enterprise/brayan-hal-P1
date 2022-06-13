@@ -20,9 +20,9 @@ public class Principle {
         this.is_active = users.getIsActive();
     }
 
-    public Principle(String username, String user_id, String role) {
-        this.username = username;
+    public Principle(String user_id, String username, String role) {
         this.user_id = user_id;
+        this.username = username;
         this.role = role;
     }
 

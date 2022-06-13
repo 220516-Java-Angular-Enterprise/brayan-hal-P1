@@ -23,13 +23,13 @@ public class FinanceService {
 
     public List<ReimbursementType> getByType(String type){
         switch(type){
-            case "/lodging":
+            case "lodging":
                 return financeDAO.getAllLodging();
-            case "/food":
+            case "food":
                 return financeDAO.getAllFood();
-            case "/other":
+            case "other":
                 return financeDAO.getAllOther();
-            case "/travel":
+            case "travel":
                 return financeDAO.getAllTravel();
             default:
                 throw new ResourceConflictException();
@@ -40,7 +40,7 @@ public class FinanceService {
         switch(status){
             case "pending":
                 return financeDAO.getAllPending();
-            case "declined":
+            case "denied":
                 return financeDAO.getAllDeclined();
             case "approved":
                 return financeDAO.getAllApproved();
@@ -49,7 +49,7 @@ public class FinanceService {
         }
     }
 
-    public void changeStatus(ChangeStatusRequest changeStatusRequest){
-        financeDAO.changeStatus(changeStatusRequest.getStatus(), changeStatusRequest.getReimb_id());
+    public void changeStatus(ChangeStatusRequest changeStatusRequest, String user_id){
+        financeDAO.changeStatus(changeStatusRequest.getStatus(), changeStatusRequest.getReimb_id(), user_id);
     }
 }
