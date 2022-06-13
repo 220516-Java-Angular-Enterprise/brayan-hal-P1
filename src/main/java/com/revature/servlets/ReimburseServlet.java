@@ -3,6 +3,7 @@ package com.revature.servlets;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.dtos.requests.*;
 import com.revature.dtos.responses.Principle;
+import com.revature.dtos.responses.UserReimburse;
 import com.revature.models.Reimbursements;
 import com.revature.services.ReimbursementService;
 import com.revature.services.TokenService;
@@ -112,20 +113,24 @@ public class ReimburseServlet extends HttpServlet {
                 return;
             }
             if (requester.getRole().equals("FINANCIAL MANAGER")) { // if Financial Manager then can View all pending
-                List <Reimbursements> allPending = reimbursementService.getByStatus("tUwkJ7T8wA");
-                resp.setContentType("application/json");
-                resp.getWriter().write(mapper.writeValueAsString(allPending));
-                //return;
+                resp.setStatus(403);
+                return;
             }
             if(req.getPathInfo().equals("/history")){
-                List<Reimbursements> history = reimbursementService.getAllUserRs(requester.getUsername());
                 resp.setContentType("application/json");
-                resp.getWriter().write(mapper.writeValueAsString(history));
+                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getUsersNewFirst(requester.getUsername())));
+            }
+            if(req.getPathInfo().equals("/historyOldest")){
+                resp.setContentType("application/json");
+                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getUserReimburseAll(requester.getUsername())));
             }
             if (req.getPathInfo().equals("/pending")){
-                List<Reimbursements> pending = reimbursementService.getPendingByUser(requester.getUsername());
                 resp.setContentType("application/json");
-                resp.getWriter().write(mapper.writeValueAsString(pending));
+                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getPendingNewFirst(requester.getUsername())));
+            }
+            if(req.getPathInfo().equals("/pendingOldest")){
+                resp.setContentType("application/json");
+                resp.getWriter().write(mapper.writeValueAsString(reimbursementService.getUserPending(requester.getUsername())));
             }
 
 

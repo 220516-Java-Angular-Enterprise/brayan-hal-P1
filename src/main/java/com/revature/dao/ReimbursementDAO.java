@@ -1,5 +1,6 @@
 package com.revature.dao;
 
+import com.revature.dtos.responses.UserReimburse;
 import com.revature.models.Reimbursements;
 import com.revature.util.database.ConnectionFactory;
 import com.revature.util.exceptions.InvalidSQLException;
@@ -103,8 +104,8 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
 
 
     /// view reimburse by author ID & status
-    public List<Reimbursements> getPendingByUser(String author_id){
-        List<Reimbursements> reimburse = new ArrayList<>();
+    public List<UserReimburse> getPendingByUser(String author_id){
+        List<UserReimburse> pendingReimburses = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
             PreparedStatement ps = con.prepareStatement("SELECT amount, submitted, description, ers.status, ert.\"type\" \n" +
                     "FROM ers_reimbursements er\n" +
@@ -114,7 +115,7 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
             ps.setString(1,author_id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                reimburse.add(new Reimbursements((rs.getDouble("amount")),
+                pendingReimburses.add(new UserReimburse((rs.getDouble("amount")),
                         rs.getDate("submitted"), rs.getString("description"), rs.getString("status"),
                         rs.getString("type")
                 ));
@@ -122,8 +123,33 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
         }catch (SQLException e){
             throw new InvalidSQLException("An error occurred retrieving these forms");
         }
-        return reimburse;
+        return pendingReimburses;
     }
+
+
+    public List<UserReimburse> getNewPendingFirst(String author_id){
+        List<UserReimburse> pendingReimburses2 = new ArrayList<>();
+        try(Connection con = ConnectionFactory.getInstance().getConnection()){
+            PreparedStatement ps = con.prepareStatement("SELECT amount, submitted, description, ers.status, ert.\"type\" \n" +
+                    "FROM ers_reimbursements er\n" +
+                    "inner join ers_reimbursement_statuses ers on er.status_id = ers.status_id \n" +
+                    "inner join ers_reimbursement_types ert on er.type_id = ert.type_id \n" +
+                    "WHERE author_id = ? AND er.status_id = 'tUwkJ7T8wA'\n" +
+                    "order by er.submitted desc;");
+            ps.setString(1,author_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                pendingReimburses2.add(new UserReimburse((rs.getDouble("amount")),
+                        rs.getDate("submitted"), rs.getString("description"), rs.getString("status"),
+                        rs.getString("type")
+                ));
+            }
+        }catch (SQLException e){
+            throw new InvalidSQLException("An error occurred retrieving these forms");
+        }
+        return pendingReimburses2;
+    }
+
     ///view all details by its ID//
     public List<Reimbursements> getDetailsByReimburseID(String reimb_id){
         List<Reimbursements> reimburse = new ArrayList<>();
@@ -156,25 +182,48 @@ public class ReimbursementDAO implements ICrudDAO<Reimbursements> {
         }
     }
 
-    public List<Reimbursements> getAllByUser(String author_id){
-        List<Reimbursements> allUser = new ArrayList<>();
+    public List<UserReimburse> getAllByUser(String author_id){
+        List<UserReimburse> allUser = new ArrayList<>();
         try (Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements WHERE author_id =?");
+            PreparedStatement ps = con.prepareStatement("SELECT amount, submitted, description, ers.status, ert.\"type\" \n" +
+                    "FROM ers_reimbursements er\n" +
+                    "inner join ers_reimbursement_statuses ers on er.status_id = ers.status_id \n" +
+                    "inner join ers_reimbursement_types ert on er.type_id = ert.type_id \n" +
+                    "WHERE author_id = ? \n");
             ps.setString(1,author_id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                Reimbursements userAll = new Reimbursements(
-                         rs.getDouble("amount"),
-                        rs.getDate("submitted"),
-                        rs.getString("description"),  rs.getString("status_id"),
-                        rs.getString("type_id")
-                );
-                allUser.add(userAll);
+                allUser.add(new UserReimburse((rs.getDouble("amount")),
+                        rs.getDate("submitted"), rs.getString("description"), rs.getString("status"),
+                        rs.getString("type")
+                ));
             }
         }catch (SQLException e){
             System.out.println(e.getMessage());
         }
         return allUser;
+    }
+    public List<UserReimburse> getUserAllNewFirst(String author_id){
+        List<UserReimburse> allUser2 = new ArrayList<>();
+        try (Connection con = ConnectionFactory.getInstance().getConnection()){
+            PreparedStatement ps = con.prepareStatement("SELECT amount, submitted, description, ers.status, ert.\"type\" \n" +
+                    "FROM ers_reimbursements er\n" +
+                    "inner join ers_reimbursement_statuses ers on er.status_id = ers.status_id \n" +
+                    "inner join ers_reimbursement_types ert on er.type_id = ert.type_id \n" +
+                    "WHERE author_id = ?\n" +
+                    "order by er.submitted desc;");
+            ps.setString(1,author_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                allUser2.add(new UserReimburse((rs.getDouble("amount")),
+                        rs.getDate("submitted"), rs.getString("description"), rs.getString("status"),
+                        rs.getString("type")
+                ));
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return allUser2;
     }
 
 
