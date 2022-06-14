@@ -14,7 +14,7 @@ public class Reimbursements {
     private String resolver_id;
     private String status_id;
     private String type_id;
-
+public Reimbursements(){ super();}
     public Reimbursements(double amount, String description, String type_id, String author_id){
         this.amount = amount;
         this.description = description;
