@@ -31,4 +31,4 @@ all employees in the company. Finance managers are authorized to approve and den
 - JUnit
 
 ## ER diagram
-![er-diagram](misc/ERS-Relational-Model.png)
+![er-diagram](ERS-Relational-Model.png)
