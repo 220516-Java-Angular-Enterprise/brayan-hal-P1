@@ -29,6 +29,7 @@ all employees in the company. Finance managers are authorized to approve and den
 - Java EE Servlets
 - JSON Web Tokens
 - JUnit
+- Mockito
 
 ## ER diagram
 ![er-diagram](ERS-Relational-Model.png)
